@@ -8,6 +8,10 @@ import streamlit as st
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 
+# Avoid tqdm/transformers progress rendering issues in Streamlit on Windows.
+os.environ.setdefault("TQDM_DISABLE", "1")
+os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
+
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Sensor GPT — ELCIA COE",
@@ -24,17 +28,17 @@ html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
 
-/* Dark gradient background */
+/* Light background */
 .stApp {
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-    color: #e0e0e0;
+    background: linear-gradient(135deg, #f8fafc, #eef2ff, #f5f3ff);
+    color: #1f2937;
 }
 
 /* Sidebar styling */
 section[data-testid="stSidebar"] {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    border-right: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(6px);
+    border-right: 1px solid rgba(99,102,241,0.2);
 }
 
 /* Chat message bubbles */
@@ -50,9 +54,9 @@ section[data-testid="stSidebar"] {
 }
 
 .bot-msg {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: #e0e0e0;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid rgba(99,102,241,0.2);
+    color: #1f2937;
     padding: 14px 18px;
     border-radius: 18px 18px 18px 4px;
     margin: 8px 0;
@@ -61,8 +65,8 @@ section[data-testid="stSidebar"] {
 }
 
 .sensor-card {
-    background: rgba(99,102,241,0.1);
-    border: 1px solid rgba(99,102,241,0.3);
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.25);
     border-radius: 12px;
     padding: 12px 16px;
     margin: 6px 0;
@@ -80,8 +84,8 @@ section[data-testid="stSidebar"] {
     letter-spacing: 0.05em;
 }
 
-h1, h2, h3 { color: #a5b4fc !important; }
-.stTextInput > div > div > input { background: rgba(255,255,255,0.08) !important; color: white !important; border: 1px solid rgba(255,255,255,0.2) !important; border-radius: 10px !important; }
+h1, h2, h3 { color: #4338ca !important; }
+.stTextInput > div > div > input { background: white !important; color: #111827 !important; border: 1px solid rgba(99,102,241,0.35) !important; border-radius: 10px !important; }
 .stButton > button { background: linear-gradient(135deg, #6366f1, #8b5cf6) !important; color: white !important; border: none !important; border-radius: 10px !important; padding: 0.5rem 1.5rem !important; font-weight: 600 !important; }
 .stButton > button:hover { opacity: 0.85 !important; transform: translateY(-1px) !important; }
 </style>
