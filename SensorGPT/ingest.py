@@ -5,7 +5,7 @@ Reads sensors_dataset.csv and indexes it into a local ChromaDB vector store.
 
 import os
 import pandas as pd
-from langchain.docstore.document import Document
+from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 
