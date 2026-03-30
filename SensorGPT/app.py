@@ -6,7 +6,7 @@ A RAG-powered chatbot for hardware engineers to find the right sensor.
 import os
 import streamlit as st
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 
 # Avoid tqdm/transformers progress rendering issues in Streamlit on Windows.
 os.environ.setdefault("TQDM_DISABLE", "1")
