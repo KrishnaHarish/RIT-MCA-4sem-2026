@@ -12,7 +12,7 @@ Farmers and agronomists often struggle to identify crop diseases early. An autom
 - Provide a simple inference pipeline and UI for end-user testing.
 
 ## Dataset (expected format)
-Use an image dataset organized like this (compatible with `torchvision.datasets.ImageFolder`):
+You can use either of these layouts (both are compatible with `torchvision.datasets.ImageFolder`):
 
 ```text
 CropDiseasePrediction/
@@ -27,7 +27,18 @@ CropDiseasePrediction/
       ...
 ```
 
-If your dataset has a different structure (for example CSV labels or a single folder), update `src/train.py` accordingly.
+PlantVillage-style (common Kaggle/Korn dataset layout):
+
+```text
+CropDiseasePrediction/
+  data/
+    PlantVillage/
+      class_1/
+      class_2/
+      ...
+```
+
+If you use PlantVillage-style (no `train/` and `val/`), the trainer will automatically split into train/val using `--val_ratio`.
 
 ## Methodology (typical)
 1. Data loading and augmentation (train-time transforms).
@@ -70,16 +81,41 @@ CropDiseasePrediction/
 ## Setup
 1. Create/activate your virtual environment:
    ```powershell
-   .\.venv\Scripts\Activate.ps1
+   ..\.venv\Scripts\Activate.ps1
    ```
 2. Install dependencies:
    ```powershell
    pip install -r requirements.txt
    ```
 
+Run the above steps from the `CropDiseasePrediction` folder (so `..\.venv\...` resolves correctly), or from the repo root using `.\.venv\Scripts\Activate.ps1`.
+
+## Download PlantVillage (No Kaggle)
+PlantVillage is publicly available on Hugging Face, so you can download it without Kaggle credentials.
+
+This exports the dataset into an `ImageFolder`-compatible layout:
+- `data/train/<class>/...`
+- `data/val/<class>/...`
+
+Download all (may take some time):
+```powershell
+python .\src\download_plantvillage.py --out_dir .\data
+```
+
+Faster test run (smaller subset):
+```powershell
+python .\src\download_plantvillage.py --out_dir .\data --max_train_images 2000 --max_val_images 500
+```
+
 ## Train
 ```powershell
 python .\src\train.py --data_dir .\data --epochs 10 --batch_size 32 --arch resnet18
+```
+
+For PlantVillage-style (single root folder of class folders), point `--data_dir` directly to that root:
+
+```powershell
+python .\src\train.py --data_dir .\data\PlantVillage --epochs 10 --batch_size 32 --arch resnet18 --val_ratio 0.2 --seed 42
 ```
 After training, artifacts will be written to:
 - `models/model.pt`
