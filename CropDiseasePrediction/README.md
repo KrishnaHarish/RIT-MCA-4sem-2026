@@ -90,21 +90,37 @@ CropDiseasePrediction/
 
 Run the above steps from the `CropDiseasePrediction` folder (so `..\.venv\...` resolves correctly), or from the repo root using `.\.venv\Scripts\Activate.ps1`.
 
-## Download PlantVillage (No Kaggle)
-PlantVillage is publicly available on Hugging Face, so you can download it without Kaggle credentials.
+## Download PlantVillage (No Kaggle - Zenodo)
+Use the PlantVillage archive from Zenodo (no Kaggle credentials).
 
-This exports the dataset into an `ImageFolder`-compatible layout:
+This workflow produces an `ImageFolder`-compatible layout:
 - `data/train/<class>/...`
 - `data/val/<class>/...`
 
-Download all (may take some time):
+### 1) Download the `.7z`
+Download `plantvillage_deeplearning_paper_dataset.7z` from:
+https://zenodo.org/records/1204914
+
+Put it here (folder will be created):
 ```powershell
-python .\src\download_plantvillage.py --out_dir .\data
+.\data\plantvillage_download\
 ```
 
-Faster test run (smaller subset):
+### 2) Extract with 7-Zip
 ```powershell
-python .\src\download_plantvillage.py --out_dir .\data --max_train_images 2000 --max_val_images 500
+"C:\Program Files\7-Zip\7z.exe" x .\data\plantvillage_download\plantvillage_deeplearning_paper_dataset.7z -o.\data\plantvillage_extracted -y
+```
+
+### 3) Export `train/val` folders for PyTorch
+This uses the dataset’s provided split (`80-20/`) and copies images into `data/train` and `data/val`.
+
+```powershell
+python .\src\export_plantvillage_imagefolder.py --out_dir .\data --split_name 80-20 --link_mode hardlink
+```
+
+Optional: faster subset export for quick testing:
+```powershell
+python .\src\export_plantvillage_imagefolder.py --out_dir .\data --split_name 80-20 --link_mode copy --max_train_images 2000 --max_val_images 500
 ```
 
 ## Train
@@ -112,10 +128,10 @@ python .\src\download_plantvillage.py --out_dir .\data --max_train_images 2000 -
 python .\src\train.py --data_dir .\data --epochs 10 --batch_size 32 --arch resnet18
 ```
 
-For PlantVillage-style (single root folder of class folders), point `--data_dir` directly to that root:
+If your dataset is a single `ImageFolder` root (class subfolders directly under `--data_dir`, and no `train/`/`val/` folders yet), the trainer can auto-split into train/val:
 
 ```powershell
-python .\src\train.py --data_dir .\data\PlantVillage --epochs 10 --batch_size 32 --arch resnet18 --val_ratio 0.2 --seed 42
+python .\src\train.py --data_dir .\data\<your_image_root> --epochs 10 --batch_size 32 --arch resnet18 --val_ratio 0.2 --seed 42
 ```
 After training, artifacts will be written to:
 - `models/model.pt`

@@ -4,7 +4,14 @@ import shutil
 from pathlib import Path
 
 
-def export_split(lines, extracted_color_root: Path, out_split_root: Path, max_images: int, split_name: str):
+def export_split(
+    lines,
+    extracted_color_root: Path,
+    out_split_root: Path,
+    max_images: int,
+    split_name: str,
+    allowed_classes: set[str] | None = None,
+):
     out_split_root.mkdir(parents=True, exist_ok=True)
     written = 0
 
@@ -30,6 +37,9 @@ def export_split(lines, extracted_color_root: Path, out_split_root: Path, max_im
         src_path = extracted_color_root / class_name / filename
         if not src_path.exists():
             # Some filenames may have odd whitespace differences; if missing, skip.
+            continue
+
+        if allowed_classes is not None and class_name not in allowed_classes:
             continue
 
         dest_class_dir = out_split_root / class_name
@@ -76,6 +86,12 @@ def main():
         choices=["copy", "hardlink"],
         help="Use hardlinks to avoid duplicating files (recommended on same drive).",
     )
+    parser.add_argument(
+        "--class_names",
+        type=str,
+        default="",
+        help="Comma-separated class folder names to export (e.g., 'Apple___healthy,Tomato___healthy'). Empty = all classes.",
+    )
     args = parser.parse_args()
 
     extracted_root = Path(args.extracted_root)
@@ -97,6 +113,9 @@ def main():
     out_val_root = Path(args.out_dir) / "val"
 
     export_split._link_mode = args.link_mode  # type: ignore[attr-defined]
+    allowed_classes = None
+    if args.class_names.strip():
+        allowed_classes = {c.strip() for c in args.class_names.split(",") if c.strip()}
 
     # Read lines once (these files can be large, but manageable for our use).
     train_lines = train_txt.read_text(encoding="utf-8", errors="ignore").splitlines()
@@ -108,6 +127,7 @@ def main():
         out_split_root=out_train_root,
         max_images=args.max_train_images,
         split_name="train",
+        allowed_classes=allowed_classes,
     )
     export_split(
         lines=valid_lines,
@@ -115,6 +135,7 @@ def main():
         out_split_root=out_val_root,
         max_images=args.max_val_images,
         split_name="val",
+        allowed_classes=allowed_classes,
     )
 
 
