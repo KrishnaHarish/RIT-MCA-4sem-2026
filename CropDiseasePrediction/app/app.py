@@ -64,7 +64,7 @@ def main():
         return
 
     image = Image.open(file).convert("RGB")
-    st.image(image, caption="Input image", use_column_width=True)
+    st.image(image, caption="Input image", use_container_width=True)
 
     tfm = transforms.Compose(
         [
@@ -82,7 +82,7 @@ def main():
         probs = torch.softmax(logits, dim=1).squeeze(0)
 
     top_prob, top_idx = torch.max(probs, dim=0)
-    st.success(f"Predicted: {classes[top_idx]} (confidence: {top_prob:.3f})")
+    st.success(f"Predicted: {classes[top_idx.item()]} (confidence: {top_prob:.3f})")
 
 
 if __name__ == "__main__":
