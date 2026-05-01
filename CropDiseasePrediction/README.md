@@ -126,7 +126,7 @@ python .\src\export_plantvillage_imagefolder.py --out_dir .\data --split_name 80
 ## Quick Demo
 
 Run the self-contained demo script to see the full pipeline in action — no dataset download required.
-It trains a tiny ResNet-18 model for one epoch on the bundled `data_smoke/` dataset (2 classes, ~1 k images)
+It trains a tiny ResNet-18 model for one epoch on the bundled `data_smoke/` dataset (2 classes, ~1,000 images)
 and then immediately runs inference on a random validation image.
 
 ```powershell

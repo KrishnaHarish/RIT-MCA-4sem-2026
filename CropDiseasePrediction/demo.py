@@ -90,7 +90,7 @@ def predict(model, image_path: Path, classes: list, device, top_k: int = TOP_K):
         probs = torch.softmax(model(x), dim=1).squeeze(0)
     k = min(top_k, len(classes))
     values, indices = torch.topk(probs, k=k)
-    return [(classes[i], v) for v, i in zip(values.tolist(), indices.tolist())]
+    return [(classes[class_idx], prob) for class_idx, prob in zip(indices.tolist(), values.tolist())]
 
 
 # ---------------------------------------------------------------------------
@@ -171,7 +171,10 @@ def main():
         print(f"\n[2/3] Model saved to temporary directory.")
 
         # ---- Pick a random val image ----------------------------------------
-        all_val_images = list(val_dir.rglob("*.jpg")) + list(val_dir.rglob("*.JPG")) + list(val_dir.rglob("*.png"))
+        all_val_images = [
+            p for p in val_dir.rglob("*")
+            if p.suffix.lower() in {".jpg", ".jpeg", ".png"}
+        ]
         if not all_val_images:
             print("[WARNING] No validation images found; skipping inference demo.")
             return
