@@ -151,3 +151,44 @@ streamlit run .\app\app.py
 - Training time depends on dataset size and hardware (GPU speeds it up).
 - If you want your project to match a specific dataset (PlantVillage, Kaggle, etc.), tell me the source and expected folder layout, and I’ll tailor `train.py` + README accordingly.
 
+## Quick Demo (no heavy deps)
+
+To try a dependency-free smoke demo that does not require PyTorch or Streamlit:
+
+1. Extract the bundled sample image:
+
+```bash
+python extract_sample_image.py
+```
+
+2. Run the lightweight smoke predictor:
+
+```bash
+python run_smoke_predict.py --image models/sample.jpg
+```
+
+This prints a deterministic pseudo-prediction using `models/classes.json`.
+
+Full app (Streamlit)
+
+To run the real Streamlit UI (requires dependencies / PyTorch):
+
+```bash
+# optional venv
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app/app.py
+```
+
+Docker (isolated)
+
+You can build and run the included `Dockerfile` to avoid local dependency issues:
+
+```bash
+docker build -t crop-disease-app -f Dockerfile .
+docker run --rm -p 8501:8501 -v "$(pwd)/models":/app/models crop-disease-app
+```
+
+If you want GPU support, ask me to add a CUDA-capable Dockerfile variant.
+
