@@ -123,6 +123,47 @@ Optional: faster subset export for quick testing:
 python .\src\export_plantvillage_imagefolder.py --out_dir .\data --split_name 80-20 --link_mode copy --max_train_images 2000 --max_val_images 500
 ```
 
+## Quick Demo
+
+Run the self-contained demo script to see the full pipeline in action — no dataset download required.
+It trains a tiny ResNet-18 model for one epoch on the bundled `data_smoke/` dataset (2 classes, ~1 k images)
+and then immediately runs inference on a random validation image.
+
+```powershell
+python .\demo.py
+```
+
+Expected output (values will vary slightly):
+
+```
+============================================================
+  Crop Disease Prediction — Quick Demo
+============================================================
+  Classes (2): Apple___healthy, Tomato___healthy
+  Train images : 1000
+  Val images   : 359
+  Device       : cpu
+
+[1/3] Training for 1 epoch(s) …
+      Epoch 1/1 — loss=0.3228  val_acc=0.9972
+
+[2/3] Model saved to temporary directory.
+
+[3/3] Running inference on a random validation image …
+      File  : <sample>.JPG
+      Label : Apple___healthy
+
+  Top predictions:
+    1. Apple___healthy                          0.8332 ✓
+    2. Tomato___healthy                         0.1668
+
+============================================================
+  Demo complete!
+============================================================
+```
+
+> The temporary model artifact is written to a system temp directory and cleaned up automatically.
+
 ## Train
 ```powershell
 python .\src\train.py --data_dir .\data --epochs 10 --batch_size 32 --arch resnet18
