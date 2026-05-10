@@ -42,7 +42,11 @@ def load_artifacts(project_root: Path, arch: str):
     classes = json.loads(classes_path.read_text(encoding="utf-8"))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = get_model(arch, num_classes=len(classes)).to(device)
-    model.load_state_dict(torch.load(model_path, map_location=device))
+    try:
+        model.load_state_dict(torch.load(model_path, map_location=device))
+    except RuntimeError:
+        return None, classes
+
     model.eval()
     return model, classes
 
@@ -56,7 +60,10 @@ def main():
 
     model, classes = load_artifacts(project_root, arch=arch)
     if model is None:
-        st.warning("Model not found. Train the model first (see README in this folder).")
+        if classes is not None:
+            st.error(f"Failed to load weights for **{arch}**. This usually happens if the saved checkpoint was trained with a different architecture. Please select the correct backbone or re-train.")
+        else:
+            st.warning("Model not found. Train the model first (see README in this folder).")
         return
 
     file = st.file_uploader("Upload a leaf/plant image", type=["jpg", "jpeg", "png"])
