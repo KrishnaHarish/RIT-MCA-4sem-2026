@@ -3,4 +3,8 @@ __pycache__/
 *.pt
 models/
 data/
+data_tomato/
+data_tomato_small/
+models_tomato10_fast/
+models_tomato_small/
 .DS_Store
