@@ -1,15 +1,27 @@
-# Crop Disease Prediction (MCA - 4th Sem) — Ramaiah Institute of Technology
+# Tomato Disease Prediction (MCA - 4th Sem) — Ramaiah Institute of Technology
 
 ## Overview
-This project predicts the crop disease class from an input plant image. It is designed for an MCA 4th semester academic submission and demonstrates applied ML (image classification) with a practical inference UI.
+This project predicts tomato leaf disease class from an input image. It is designed for an MCA 4th semester academic submission and demonstrates applied ML (image classification) with a practical inference UI.
 
 ## Problem Statement
-Farmers and agronomists often struggle to identify crop diseases early. An automated model that classifies disease from leaf/plant images can help recommend timely action and reduce yield loss.
+Farmers and agronomists often struggle to identify tomato diseases early. An automated model that classifies disease from leaf images can help recommend timely action and reduce yield loss.
 
 ## Objectives
-- Build an image classification model to predict crop disease categories.
+- Build an image classification model to predict tomato disease categories.
 - Evaluate performance using standard metrics (accuracy, precision, recall, F1-score, confusion matrix).
 - Provide a simple inference pipeline and UI for end-user testing.
+
+## Tomato Classes (Target)
+1. `Tomato___Bacterial_spot`
+2. `Tomato___Early_blight`
+3. `Tomato___Late_blight`
+4. `Tomato___Leaf_Mold`
+5. `Tomato___Septoria_leaf_spot`
+6. `Tomato___Spider_mites_Two-spotted_spider_mite`
+7. `Tomato___Target_Spot`
+8. `Tomato___Tomato_Yellow_Leaf_Curl_Virus`
+9. `Tomato___Tomato_mosaic_virus`
+10. `Tomato___healthy`
 
 ## Dataset (expected format)
 You can use either of these layouts (both are compatible with `torchvision.datasets.ImageFolder`):
@@ -53,10 +65,35 @@ Recommended metrics:
 - Precision / Recall / F1-score (macro or weighted)
 - Confusion matrix
 
+### Current evaluated metrics (10-class tomato run)
+These are the actual measured values from the latest 10-class tomato model run (`src/train_eval_tomato10_fast.py`):
+
+- Dataset: `data_tomato_small` (train: `2000`, val: `759`)
+- Number of classes: `10` tomato disease classes
+- Epochs: `1` (quick benchmark run)
+- Best validation accuracy during training: `10.54%`
+- Final accuracy: `10.54%`
+- F1-score (macro): `0.0191`
+- Confusion matrix is saved in:
+  - `models_tomato10_fast/metrics.json`
+
+> Note: This is a fast 1-epoch baseline (from-scratch model). Use it as proof of pipeline execution, not final performance.
+>
+> Recommended final run for presentation/report:
+> - Use transfer learning (`ResNet18` with pretrained ImageNet weights)
+> - Train for 10-20 epochs on full tomato split (`data_tomato`)
+> - Report class-wise precision/recall/F1 and confusion matrix in the final submission
+
 ## Deliverables
 - Trained model artifact(s) in `models/`
 - Inference script (`src/predict.py`)
 - Optional Streamlit demo UI (`app/app.py`)
+
+## MCAIN Rubric Alignment (Quick Mapping)
+- **CO1 - Tools and technologies:** Python, PyTorch, torchvision, Streamlit, transfer learning.
+- **CO1 - Relevance to market:** early disease detection support for tomato farming and agri advisory use-cases.
+- **CO2 - Demonstration:** end-to-end pipeline from data preparation to model inference and UI demo.
+- **CO3 - Report and presentation:** include architecture, metrics, confusion matrix, limitations, and future work.
 
 ## Project Structure
 ```text
@@ -73,6 +110,8 @@ CropDiseasePrediction/
   src/
     train.py
     predict.py
+    eval_current_model.py
+    train_eval_tomato10_fast.py
   requirements.txt
   README.md
   .gitignore
@@ -183,6 +222,22 @@ After training, artifacts will be written to:
 python .\src\predict.py --model_path .\models\model.pt --classes_path .\models\classes.json --image_path "path_to_image.jpg"
 ```
 
+## Evaluate current saved model
+```powershell
+python .\src\eval_current_model.py
+```
+
+This writes measured metrics to:
+- `models/metrics_current.json`
+
+## Train + evaluate 10-class tomato benchmark
+```powershell
+python .\src\train_eval_tomato10_fast.py
+```
+
+This writes measured metrics to:
+- `models_tomato10_fast/metrics.json`
+
 ## Run UI (Streamlit)
 ```powershell
 streamlit run .\app\app.py
@@ -191,4 +246,7 @@ streamlit run .\app\app.py
 ## Notes
 - Training time depends on dataset size and hardware (GPU speeds it up).
 - If you want your project to match a specific dataset (PlantVillage, Kaggle, etc.), tell me the source and expected folder layout, and I’ll tailor `train.py` + README accordingly.
+- Current benchmark metric files:
+  - 2-class smoke evaluation: `models/metrics_current.json`
+  - 10-class tomato baseline: `models_tomato10_fast/metrics.json`
 
