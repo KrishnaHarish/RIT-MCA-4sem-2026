@@ -135,7 +135,7 @@ def main():
     num_classes = len(classes)
 
     print("=" * 60)
-    print("  Crop Disease Prediction — Quick Demo")
+    print("  Crop Disease Prediction - Quick Demo")
     print("=" * 60)
     print(f"  Classes ({num_classes}): {', '.join(classes)}")
     print(f"  Train images : {len(train_ds)}")
@@ -153,11 +153,11 @@ def main():
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.fc.parameters(), lr=LR)
 
-    print(f"[1/3] Training for {EPOCHS} epoch(s) …")
+    print(f"[1/3] Training for {EPOCHS} epoch(s) ...")
     for epoch in range(1, EPOCHS + 1):
         loss = train_one_epoch(model, train_loader, criterion, optimizer, device)
         acc = evaluate(model, val_loader, device)
-        print(f"      Epoch {epoch}/{EPOCHS} — loss={loss:.4f}  val_acc={acc:.4f}")
+        print(f"      Epoch {epoch}/{EPOCHS} - loss={loss:.4f}  val_acc={acc:.4f}")
 
     # ---- Save artifacts to a temp directory --------------------------------
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -182,7 +182,7 @@ def main():
         sample_image = random.choice(all_val_images)
         true_label = sample_image.parent.name
 
-        print(f"\n[3/3] Running inference on a random validation image …")
+        print(f"\n[3/3] Running inference on a random validation image ...")
         print(f"      File  : {sample_image.name}")
         print(f"      Label : {true_label}")
 
@@ -192,7 +192,7 @@ def main():
         print()
         print("  Top predictions:")
         for rank, (cls, prob) in enumerate(results, start=1):
-            marker = " ✓" if cls == true_label else ""
+            marker = " [OK]" if cls == true_label else ""
             print(f"    {rank}. {cls:<40s} {prob:.4f}{marker}")
 
     print()
