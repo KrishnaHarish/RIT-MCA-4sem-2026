@@ -90,7 +90,7 @@ def main():
         "--class_names",
         type=str,
         default="",
-        help="Comma-separated class folder names to export (e.g., 'Apple___healthy,Tomato___healthy'). Empty = all classes.",
+        help="Comma-separated class folder names to export (e.g., 'Tomato___Bacterial_spot,Tomato___healthy'). Empty = all classes.",
     )
     args = parser.parse_args()
 

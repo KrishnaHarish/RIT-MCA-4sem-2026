@@ -24,19 +24,33 @@ Farmers and agronomists often struggle to identify tomato diseases early. An aut
 10. `Tomato___healthy`
 
 ## Dataset (expected format)
-You can use either of these layouts (both are compatible with `torchvision.datasets.ImageFolder`):
+You can use either of these layouts for a tomato-only dataset (both are compatible with `torchvision.datasets.ImageFolder`):
 
 ```text
 CropDiseasePrediction/
   data/
     train/
-      class_1/
-      class_2/
-      ...
+      Tomato___Bacterial_spot/
+      Tomato___Early_blight/
+      Tomato___Late_blight/
+      Tomato___Leaf_Mold/
+      Tomato___Septoria_leaf_spot/
+      Tomato___Spider_mites_Two-spotted_spider_mite/
+      Tomato___Target_Spot/
+      Tomato___Tomato_Yellow_Leaf_Curl_Virus/
+      Tomato___Tomato_mosaic_virus/
+      Tomato___healthy/
     val/
-      class_1/
-      class_2/
-      ...
+      Tomato___Bacterial_spot/
+      Tomato___Early_blight/
+      Tomato___Late_blight/
+      Tomato___Leaf_Mold/
+      Tomato___Septoria_leaf_spot/
+      Tomato___Spider_mites_Two-spotted_spider_mite/
+      Tomato___Target_Spot/
+      Tomato___Tomato_Yellow_Leaf_Curl_Virus/
+      Tomato___Tomato_mosaic_virus/
+      Tomato___healthy/
 ```
 
 PlantVillage-style (common Kaggle/Korn dataset layout):
@@ -44,10 +58,17 @@ PlantVillage-style (common Kaggle/Korn dataset layout):
 ```text
 CropDiseasePrediction/
   data/
-    PlantVillage/
-      class_1/
-      class_2/
-      ...
+    TomatoPlantVillage/
+      Tomato___Bacterial_spot/
+      Tomato___Early_blight/
+      Tomato___Late_blight/
+      Tomato___Leaf_Mold/
+      Tomato___Septoria_leaf_spot/
+      Tomato___Spider_mites_Two-spotted_spider_mite/
+      Tomato___Target_Spot/
+      Tomato___Tomato_Yellow_Leaf_Curl_Virus/
+      Tomato___Tomato_mosaic_virus/
+      Tomato___healthy/
 ```
 
 If you use PlantVillage-style (no `train/` and `val/`), the trainer will automatically split into train/val using `--val_ratio`.
@@ -165,7 +186,7 @@ python .\src\export_plantvillage_imagefolder.py --out_dir .\data --split_name 80
 ## Quick Demo
 
 Run the self-contained demo script to see the full pipeline in action — no dataset download required.
-It trains a tiny ResNet-18 model for one epoch on the bundled `data_smoke/` dataset (2 classes, ~1,000 images)
+It trains a tiny ResNet-18 model for one epoch on the bundled `data_smoke/` dataset (smoke-test data, ~1,000 images)
 and then immediately runs inference on a random validation image.
 
 ```powershell
@@ -178,7 +199,7 @@ Expected output (values will vary slightly):
 ============================================================
   Crop Disease Prediction — Quick Demo
 ============================================================
-  Classes (2): Apple___healthy, Tomato___healthy
+  Classes (10): Tomato___Bacterial_spot, Tomato___Early_blight, Tomato___Late_blight, Tomato___Leaf_Mold, Tomato___Septoria_leaf_spot, Tomato___Spider_mites_Two-spotted_spider_mite, Tomato___Target_Spot, Tomato___Tomato_Yellow_Leaf_Curl_Virus, Tomato___Tomato_mosaic_virus, Tomato___healthy
   Train images : 1000
   Val images   : 359
   Device       : cpu
@@ -190,11 +211,11 @@ Expected output (values will vary slightly):
 
 [3/3] Running inference on a random validation image …
       File  : <sample>.JPG
-      Label : Apple___healthy
+      Label : Tomato___healthy
 
   Top predictions:
-    1. Apple___healthy                          0.8332 ✓
-    2. Tomato___healthy                         0.1668
+    1. Tomato___healthy                         0.8332 ✓
+    2. Tomato___Bacterial_spot                 0.1668
 
 ============================================================
   Demo complete!
@@ -208,7 +229,7 @@ Expected output (values will vary slightly):
 python .\src\train.py --data_dir .\data --epochs 10 --batch_size 32 --arch resnet18
 ```
 
-If your dataset is a single `ImageFolder` root (class subfolders directly under `--data_dir`, and no `train/`/`val/` folders yet), the trainer can auto-split into train/val:
+If your dataset is a single tomato `ImageFolder` root (class subfolders directly under `--data_dir`, and no `train/`/`val/` folders yet), the trainer can auto-split into train/val:
 
 ```powershell
 python .\src\train.py --data_dir .\data\<your_image_root> --epochs 10 --batch_size 32 --arch resnet18 --val_ratio 0.2 --seed 42

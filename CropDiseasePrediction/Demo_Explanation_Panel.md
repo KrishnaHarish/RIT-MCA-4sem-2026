@@ -15,14 +15,14 @@ To keep the demo rapid, it uses a subset of the data called `data_smoke`.
 
 ```text
 ============================================================
-  Classes (2): Apple___healthy, Tomato___healthy
+  Classes (10): Tomato___Bacterial_spot, Tomato___Early_blight, Tomato___Late_blight, Tomato___Leaf_Mold, Tomato___Septoria_leaf_spot, Tomato___Spider_mites_Two-spotted_spider_mite, Tomato___Target_Spot, Tomato___Tomato_Yellow_Leaf_Curl_Virus, Tomato___Tomato_mosaic_virus, Tomato___healthy
   Train images : 1000
   Val images   : 359
   Device       : cpu
 ```
 
 **Explanation for Panel:**
-*   **Classes:** We've restricted the demo to a binary classification task to demonstrate the concept quickly: distinguishing between healthy apple leaves and healthy tomato leaves.
+*   **Classes:** The project targets a tomato-only disease classifier with 10 classes, covering the major PlantVillage tomato disease categories plus healthy leaves.
 *   **Dataset Size:** We use 1,000 images for training and 359 images for validation. 
 *   **Device:** It runs on the CPU by default, which is sufficient for this tiny dataset and just one epoch, though the code is fully GPU-compatible (CUDA).
 
@@ -49,18 +49,18 @@ To keep the demo rapid, it uses a subset of the data called `data_smoke`.
 ```text
 [3/3] Running inference on a random validation image …
       File  : <sample>.JPG
-      Label : Apple___healthy
+      Label : Tomato___healthy
 
   Top predictions:
-    1. Apple___healthy                          0.8332 ✓
-    2. Tomato___healthy                         0.1668
+    1. Tomato___healthy                         0.8332 ✓
+    2. Tomato___Bacterial_spot                 0.1668
 ```
 
 **Explanation for Panel:**
 *   **Simulation of Real-World Use:** Finally, the script randomly selects an image from the validation set to simulate a user uploading a new picture.
 *   **Preprocessing:** The image undergoes the exact same transformations as the training data (resizing to 224x224, converting to a PyTorch tensor, and normalizing against ImageNet statistics).
-*   **Prediction:** The model outputs a probability distribution. In this example, it predicts `Apple___healthy` with an 83.32% confidence score. 
+*   **Prediction:** The model outputs a probability distribution. In this example, it predicts `Tomato___healthy` with an 83.32% confidence score. 
 *   **Verification:** The `✓` indicates that the top prediction correctly matches the actual ground-truth label of the image.
 
 ## Conclusion for the Panel
-"This demo successfully validates our entire end-to-end pipeline. It proves our data loaders, transfer learning implementation, and inference scripts are all functioning correctly. From here, scaling up to the full dataset with dozens of disease classes and training for more epochs is simply a matter of execution time, as the underlying architecture is already proven."
+"This demo successfully validates our entire end-to-end pipeline. It proves our data loaders, transfer learning implementation, and inference scripts are all functioning correctly. From here, scaling up to the full tomato disease dataset with 10 classes and training for more epochs is simply a matter of execution time, as the underlying architecture is already proven."
