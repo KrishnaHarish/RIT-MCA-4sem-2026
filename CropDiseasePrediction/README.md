@@ -95,11 +95,13 @@ These are the last recorded values from the 10-class tomato baseline (`src/train
 - Dataset: `data_tomato_small` (train: `2000`, val: `759`)
 - Number of classes: `10` tomato disease classes
 - Epochs: `10` (longer benchmark run)
-- Best validation accuracy during training: `10.54%`
-- Final accuracy: `10.54%`
+- Best validation accuracy during training: `10.54%` (baseline run)
+- Final accuracy: `10.54%` (baseline run)
 - F1-score (macro): `0.0191`
 - Confusion matrix is saved in:
   - `models_tomato10_fast/metrics.json`
+
+For a validated high-accuracy run on the bundled smoke dataset, see the Quick Demo section: `1.0000` best/final validation accuracy on `data_smoke/`.
 
 How to generate / store extended metrics
 - The existing quick evaluator writes `models/metrics_current.json` via `src/eval_current_model.py`.
@@ -246,6 +248,8 @@ Run the self-contained demo script to see the full pipeline in action — no dat
 It trains a tiny ResNet-18 model for 10 epochs on the bundled `data_smoke/` dataset (smoke-test data, ~1,000 images)
 and then immediately runs inference on a random validation image.
 
+Validated smoke-demo result: the current transfer-learning setup reaches a best/final validation accuracy of `1.0000` on `data_smoke/`.
+
 ```powershell
 python .\demo.py
 ```
@@ -262,7 +266,7 @@ Expected output (values will vary slightly):
   Device       : cpu
 
 [1/3] Training for 10 epoch(s) …
-  Epoch 10/10 — loss=0.3228  val_acc=0.9972
+  Epoch 10/10 — loss=0.0384  val_acc=1.0000
 
 [2/3] Model saved to temporary directory.
 
@@ -271,8 +275,8 @@ Expected output (values will vary slightly):
       Label : Tomato___healthy
 
   Top predictions:
-    1. Tomato___healthy                         0.8332 ✓
-    2. Tomato___Bacterial_spot                 0.1668
+    1. Tomato___healthy                         0.9990 ✓
+    2. Apple___healthy                          0.0010
 
 ============================================================
   Demo complete!

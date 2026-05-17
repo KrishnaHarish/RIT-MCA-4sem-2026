@@ -3,7 +3,8 @@ from pathlib import Path
 
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, WeightedRandomSampler
+from collections import Counter
 from torchvision import datasets, models, transforms
 
 
@@ -54,27 +55,32 @@ def main():
     val_ds = datasets.ImageFolder(str(data_dir / "val"), transform=val_tfms)
     classes = train_ds.classes
 
-    train_loader = DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=0)
+    # Use a class-balanced sampler to mitigate class imbalance
+    class_counts = Counter(train_ds.targets)
+    sample_weights = [1.0 / class_counts[t] for t in train_ds.targets]
+    sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
+    train_loader = DataLoader(train_ds, batch_size=64, sampler=sampler, num_workers=0)
     val_loader = DataLoader(val_ds, batch_size=64, shuffle=False, num_workers=0)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # Use pretrained ResNet18 for transfer learning
     model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
     model.fc = nn.Linear(model.fc.in_features, len(classes))
-    # Freeze backbone
-    for p in model.parameters():
+    # Freeze backbone then unfreeze last block (layer4) + head for fine-tuning
+    for name, p in model.named_parameters():
         p.requires_grad = False
-    for p in model.fc.parameters():
-        p.requires_grad = True
+        if name.startswith("layer4") or name.startswith("fc"):
+            p.requires_grad = True
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.fc.parameters(), lr=1e-3)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
+    params_to_opt = [p for p in model.parameters() if p.requires_grad]
+    optimizer = torch.optim.AdamW(params_to_opt, lr=1e-3, weight_decay=1e-4)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
 
     best_acc = 0.0
     best_state = None
-    epochs = 30
+    epochs = 10
 
     for epoch in range(1, epochs + 1):
         model.train()
