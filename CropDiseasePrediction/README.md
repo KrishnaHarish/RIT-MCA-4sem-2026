@@ -276,7 +276,7 @@ Expected output (values will vary slightly):
 
   Top predictions:
     1. Tomato___healthy                         0.9990 ✓
-    2. Tomato___Bacterial_spot                  
+    2. Tomato___Early_blight:                   0.1216
 
 ============================================================
   Demo complete!
