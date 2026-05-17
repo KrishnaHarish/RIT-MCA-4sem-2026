@@ -15,8 +15,9 @@ def main():
 
     train_tfms = transforms.Compose(
         [
-            transforms.Resize((224, 224)),
+            transforms.RandomResizedCrop(224, scale=(0.8, 1.0)),
             transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(0.2, 0.2, 0.2, 0.05),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ]
@@ -37,14 +38,21 @@ def main():
     val_loader = DataLoader(val_ds, batch_size=64, shuffle=False, num_workers=0)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = models.resnet18(weights=None)
+    # pretrained ResNet18 with transfer learning
+    model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
     model.fc = nn.Linear(model.fc.in_features, len(classes))
+    # freeze backbone
+    for p in model.parameters():
+        p.requires_grad = False
+    for p in model.fc.parameters():
+        p.requires_grad = True
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    optimizer = torch.optim.Adam(model.fc.parameters(), lr=1e-3)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
 
-    epochs = 3
+    epochs = 30
     for epoch in range(1, epochs + 1):
         model.train()
         running_loss = 0.0
@@ -60,6 +68,7 @@ def main():
 
         avg_loss = running_loss / len(train_ds)
         print(f"Epoch {epoch}/{epochs} train_loss={avg_loss:.4f}")
+        scheduler.step()
 
     model.eval()
     y_true, y_pred = [], []

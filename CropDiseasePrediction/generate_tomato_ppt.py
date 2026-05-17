@@ -124,7 +124,7 @@ def main():
         "Results and Analysis",
         [
             "Latest 10-class tomato benchmark run (data_tomato_small):",
-            "Train/Val images: 2000 / 759 | Epochs: 1",
+            "Train/Val images: 2000 / 759 | Epochs: 10",
             "Validation Accuracy: 10.54%",
             "F1-score (macro): 0.0191",
             "Confusion matrix and full class-wise data saved in models_tomato10_fast/metrics.json",

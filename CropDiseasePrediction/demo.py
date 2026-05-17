@@ -31,7 +31,7 @@ IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 IMG_SIZE = 224
 BATCH_SIZE = 16
-EPOCHS = 1
+EPOCHS = 30
 LR = 1e-3
 TOP_K = 3
 
@@ -41,7 +41,9 @@ TOP_K = 3
 # ---------------------------------------------------------------------------
 
 def get_model(num_classes: int) -> nn.Module:
-    """Return a ResNet-18 with ImageNet weights and a replaced FC head."""
+    """Return a ResNet-18 with ImageNet weights and a replaced FC head (transfer learning).
+    Freeze the backbone and train only the final head by default.
+    """
     model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
     # Freeze backbone — only train the final classification head.
     for p in model.parameters():
@@ -115,8 +117,9 @@ def main():
     # ---- Data loading -------------------------------------------------------
     train_tfms = transforms.Compose(
         [
-            transforms.Resize((IMG_SIZE, IMG_SIZE)),
+            transforms.RandomResizedCrop(IMG_SIZE, scale=(0.8, 1.0)),
             transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(0.2, 0.2, 0.2, 0.05),
             transforms.ToTensor(),
             transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
         ]
@@ -152,12 +155,15 @@ def main():
     model = get_model(num_classes).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.fc.parameters(), lr=LR)
+    # LR scheduler: step down every 10 epochs
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
 
     print(f"[1/3] Training for {EPOCHS} epoch(s) ...")
     for epoch in range(1, EPOCHS + 1):
         loss = train_one_epoch(model, train_loader, criterion, optimizer, device)
         acc = evaluate(model, val_loader, device)
         print(f"      Epoch {epoch}/{EPOCHS} - loss={loss:.4f}  val_acc={acc:.4f}")
+        scheduler.step()
 
     # ---- Save artifacts to a temp directory --------------------------------
     with tempfile.TemporaryDirectory() as tmp_dir:

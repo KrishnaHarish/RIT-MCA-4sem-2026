@@ -35,9 +35,9 @@ def main():
 
     train_tfms = transforms.Compose(
         [
-            transforms.Resize((128, 128)),
+            transforms.RandomResizedCrop(128, scale=(0.8, 1.0)),
             transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(10),
+            transforms.ColorJitter(0.2, 0.2, 0.2, 0.05),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ]
@@ -58,14 +58,23 @@ def main():
     val_loader = DataLoader(val_ds, batch_size=64, shuffle=False, num_workers=0)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = build_model(num_classes=len(classes)).to(device)
+    # Use pretrained ResNet18 for transfer learning
+    model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
+    model.fc = nn.Linear(model.fc.in_features, len(classes))
+    # Freeze backbone
+    for p in model.parameters():
+        p.requires_grad = False
+    for p in model.fc.parameters():
+        p.requires_grad = True
+    model = model.to(device)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    optimizer = torch.optim.Adam(model.fc.parameters(), lr=1e-3)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.1)
 
     best_acc = 0.0
     best_state = None
-    epochs = 1
+    epochs = 30
 
     for epoch in range(1, epochs + 1):
         model.train()
@@ -98,6 +107,7 @@ def main():
         if val_acc > best_acc:
             best_acc = val_acc
             best_state = {k: v.cpu() for k, v in model.state_dict().items()}
+        scheduler.step()
 
     if best_state is None:
         best_state = {k: v.cpu() for k, v in model.state_dict().items()}
@@ -130,6 +140,7 @@ def main():
         "num_classes": len(classes),
         "train_images": len(train_ds),
         "val_images": len(val_ds),
+        "epochs": epochs,
         "best_val_acc_during_training": round(float(best_acc), 4),
         "accuracy": round(float(accuracy), 4),
         "f1_macro": round(float(f1_macro), 4),

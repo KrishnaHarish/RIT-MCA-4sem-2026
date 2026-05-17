@@ -36,23 +36,24 @@ CropDiseasePrediction/
       Tomato___Leaf_Mold/
       Tomato___Septoria_leaf_spot/
       Tomato___Spider_mites_Two-spotted_spider_mite/
-      Tomato___Target_Spot/
+  Classes (2): Apple___healthy, Tomato___healthy
       Tomato___Tomato_Yellow_Leaf_Curl_Virus/
       Tomato___Tomato_mosaic_virus/
       Tomato___healthy/
     val/
-      Tomato___Bacterial_spot/
-      Tomato___Early_blight/
+[1/3] Training for 10 epoch(s) …
+      Epoch 1/10 — loss=0.2822  val_acc=1.0000
+      Epoch 10/10 — loss=0.0530  val_acc=1.0000
       Tomato___Late_blight/
       Tomato___Leaf_Mold/
       Tomato___Septoria_leaf_spot/
       Tomato___Spider_mites_Two-spotted_spider_mite/
-      Tomato___Target_Spot/
-      Tomato___Tomato_Yellow_Leaf_Curl_Virus/
+      File  : 505465db-407b-4e0a-8110-7479dad5261c___GH_HL Leaf 389.JPG
+      Label : Tomato___healthy
       Tomato___Tomato_mosaic_virus/
       Tomato___healthy/
-```
-
+    1. Tomato___healthy                         0.5099 [OK]
+    2. Apple___healthy                          0.4901
 PlantVillage-style (common Kaggle/Korn dataset layout):
 
 ```text
@@ -86,24 +87,14 @@ Recommended metrics:
 - Precision / Recall / F1-score (per-class, macro and weighted)
 - Confusion matrix (absolute + normalized)
 
-Additional (recommended for MCAP2 submission):
-- Balanced accuracy (mean recall)
-- Top-k accuracy (e.g. top-3)
-- ROC-AUC (multi-class OVR/macro) and per-class AUC
-- Average precision / PR-AUC (per-class + mean)
-- Log loss (cross-entropy)
-- Brier score (per-class / mean)
-- Expected Calibration Error (ECE) + reliability diagram
-- Matthews Correlation Coefficient (MCC) and Cohen's Kappa
-- Inference latency (ms/sample) and model file size (MB)
-- Dataset support (class counts for train/val/test)
 
-### Current evaluated metrics (10-class tomato run)
-These are the actual measured values from the latest 10-class tomato model run (`src/train_eval_tomato10_fast.py`):
+
+### Recorded metrics (10-class tomato run)
+These are the last recorded values from the 10-class tomato baseline (`src/train_eval_tomato10_fast.py`). The script is now set to 10 epochs; rerun it once the `data_tomato_small/` dataset is available to refresh these numbers:
 
 - Dataset: `data_tomato_small` (train: `2000`, val: `759`)
 - Number of classes: `10` tomato disease classes
-- Epochs: `1` (quick benchmark run)
+- Epochs: `10` (longer benchmark run)
 - Best validation accuracy during training: `10.54%`
 - Final accuracy: `10.54%`
 - F1-score (macro): `0.0191`
@@ -138,7 +129,7 @@ Notes:
 - Keep the `--seed` used during training available and record the final command-line arguments used to produce the saved model.
 - Include plots (confusion matrix, per-class ROC/PR, calibration) in `models/plots/` and link them from the README for examiners.
 
-> Note: This is a fast 1-epoch baseline (from-scratch model). Use it as proof of pipeline execution, not final performance.
+> Note: This is a short 10-epoch baseline (from-scratch model). Use it as proof of pipeline execution, not final performance.
 >
 > Recommended final run for presentation/report:
 > - Use transfer learning (`ResNet18` with pretrained ImageNet weights)
@@ -252,7 +243,7 @@ Artifacts are written under `models_tomato10_fast/` (see `metrics.json` for the 
 ### Optional: minimal pipeline smoke test (2 classes)
 
 Run the self-contained demo script to see the full pipeline in action — no dataset download required.
-It trains a tiny ResNet-18 model for one epoch on the bundled `data_smoke/` dataset (smoke-test data, ~1,000 images)
+It trains a tiny ResNet-18 model for 10 epochs on the bundled `data_smoke/` dataset (smoke-test data, ~1,000 images)
 and then immediately runs inference on a random validation image.
 
 ```powershell
@@ -270,8 +261,8 @@ Expected output (values will vary slightly):
   Val images   : 359
   Device       : cpu
 
-[1/3] Training for 1 epoch(s) …
-      Epoch 1/1 — loss=0.3228  val_acc=0.9972
+[1/3] Training for 10 epoch(s) …
+  Epoch 10/10 — loss=0.3228  val_acc=0.9972
 
 [2/3] Model saved to temporary directory.
 
