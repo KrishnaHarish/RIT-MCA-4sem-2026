@@ -276,7 +276,7 @@ Expected output (values will vary slightly):
 
   Top predictions:
     1. Tomato___healthy                         0.9990 ✓
-    2. Apple___healthy                          0.0010
+    2. Tomato___Bacterial_spot                  
 
 ============================================================
   Demo complete!
