@@ -223,7 +223,33 @@ Optional: faster subset export for quick testing:
 python .\src\export_plantvillage_imagefolder.py --out_dir .\data --split_name 80-20 --link_mode copy --max_train_images 2000 --max_val_images 500
 ```
 
-## Quick Demo
+## Quick Demo (Tomato - all diseases)
+
+Train and evaluate a **10-class tomato** classifier in one step (expects `data_tomato_small/` with only `Tomato___*` class folders; the same command is documented again under **Train + evaluate 10-class tomato benchmark** below).
+
+```powershell
+python .\src\train_eval_tomato10_fast.py
+```
+
+Example terminal output (your loss and metrics may differ slightly):
+
+```
+Epoch 1/1 | train_loss=2.0829 | val_acc=0.1054
+{
+  "dataset": "data_tomato_small",
+  "num_classes": 10,
+  "train_images": 2000,
+  "val_images": 759,
+  "best_val_acc_during_training": 0.1054,
+  "accuracy": 0.1054,
+  "f1_macro": 0.0191,
+  "confusion_matrix": [ ... ]
+}
+```
+
+Artifacts are written under `models_tomato10_fast/` (see `metrics.json` for the full confusion matrix).
+
+### Optional: minimal pipeline smoke test (2 classes)
 
 Run the self-contained demo script to see the full pipeline in action — no dataset download required.
 It trains a tiny ResNet-18 model for one epoch on the bundled `data_smoke/` dataset (smoke-test data, ~1,000 images)
