@@ -83,8 +83,20 @@ If you use PlantVillage-style (no `train/` and `val/`), the trainer will automat
 ## Evaluation
 Recommended metrics:
 - Accuracy
-- Precision / Recall / F1-score (macro or weighted)
-- Confusion matrix
+- Precision / Recall / F1-score (per-class, macro and weighted)
+- Confusion matrix (absolute + normalized)
+
+Additional (recommended for MCAP2 submission):
+- Balanced accuracy (mean recall)
+- Top-k accuracy (e.g. top-3)
+- ROC-AUC (multi-class OVR/macro) and per-class AUC
+- Average precision / PR-AUC (per-class + mean)
+- Log loss (cross-entropy)
+- Brier score (per-class / mean)
+- Expected Calibration Error (ECE) + reliability diagram
+- Matthews Correlation Coefficient (MCC) and Cohen's Kappa
+- Inference latency (ms/sample) and model file size (MB)
+- Dataset support (class counts for train/val/test)
 
 ### Current evaluated metrics (10-class tomato run)
 These are the actual measured values from the latest 10-class tomato model run (`src/train_eval_tomato10_fast.py`):
@@ -97,6 +109,34 @@ These are the actual measured values from the latest 10-class tomato model run (
 - F1-score (macro): `0.0191`
 - Confusion matrix is saved in:
   - `models_tomato10_fast/metrics.json`
+
+How to generate / store extended metrics
+- The existing quick evaluator writes `models/metrics_current.json` via `src/eval_current_model.py`.
+- For MCAP2, save a detailed metrics JSON (example schema below) to `models/metrics_runX.json` and save plots to `models/plots/`.
+- Save raw predictions for reproducibility: `outputs/preds_runX.npz` containing `y_true`, `y_pred`, `y_prob`.
+
+Minimal `metrics` JSON schema (suggested):
+```
+{
+  "dataset": {"train_count": 2000, "val_count": 759, "class_counts": {"Tomato___healthy": 120, ...}},
+  "overall": {"accuracy": 0.9123, "balanced_accuracy": 0.89, "log_loss": 0.34, "mcc": 0.72},
+  "averages": {"f1_macro": 0.88, "f1_weighted": 0.90, "roc_auc_macro": 0.95, "pr_auc_macro": 0.84, "top_3_acc": 0.98},
+  "per_class": {"Tomato___healthy": {"precision":0.93, "recall":0.91, "f1":0.92, "support":120, "roc_auc":0.97}},
+  "files": {"confusion_matrix_png":"models/plots/confusion_matrix.png", "roc_png":"models/plots/roc.png"}
+}
+```
+
+Quick run suggestions
+- Produce a reproducible evaluation run (example):
+```bash
+python src/eval_current_model.py
+# (or your extended evaluator once implemented):
+python src/evaluate_metrics.py --model_path models/model.pt --classes models/classes.json --out_dir models/plots --pred_out outputs/preds_run1.npz
+```
+
+Notes:
+- Keep the `--seed` used during training available and record the final command-line arguments used to produce the saved model.
+- Include plots (confusion matrix, per-class ROC/PR, calibration) in `models/plots/` and link them from the README for examiners.
 
 > Note: This is a fast 1-epoch baseline (from-scratch model). Use it as proof of pipeline execution, not final performance.
 >
