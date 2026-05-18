@@ -1,0 +1,529 @@
+{
+  "generated_at": "2026-05-18T12:23:05+00:00",
+  "tools": {
+    "filesystem": [
+      "search_docs",
+      "summarize_doc",
+      "read_file"
+    ],
+    "github": [
+      "repo_info",
+      "list_commits",
+      "triage_issue",
+      "open_pr"
+    ],
+    "database": [
+      "run_query",
+      "generate_report"
+    ],
+    "knowledge_base": [
+      "retrieve_policy",
+      "answer_faq",
+      "fetch_guidance"
+    ]
+  },
+  "tasks": [
+    {
+      "task": "Document search and summarization",
+      "success_criteria": "Find the requested seminar notes and summarize them clearly.",
+      "tools_resources_used": "filesystem.search_docs (MCP stdio), filesystem.summarize_doc (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 325,
+      "cost_estimate": "Low",
+      "failure_modes": "None in the demo run.",
+      "recovery_actions": "Not needed.",
+      "final_output": "Short summary of MCP architecture notes.",
+      "approved": false,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:22:52+00:00",
+          "tool_name": "filesystem.search_docs",
+          "arguments_hash": "2ae8fa2fc787",
+          "server": "filesystem:mcp-stdio",
+          "latency_ms": 117,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:22:53+00:00",
+          "tool_name": "filesystem.summarize_doc",
+          "arguments_hash": "8d1b93612612",
+          "server": "filesystem:mcp-stdio",
+          "latency_ms": 208,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    },
+    {
+      "task": "Ticket creation and status tracking",
+      "success_criteria": "Create a support ticket and confirm its state.",
+      "tools_resources_used": "knowledge_base.retrieve_policy (MCP stdio), github.triage_issue (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 335,
+      "cost_estimate": "Low",
+      "failure_modes": "None in the demo run.",
+      "recovery_actions": "Not needed.",
+      "final_output": "Ticket labeled and prioritized for follow-up.",
+      "approved": false,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:22:53+00:00",
+          "tool_name": "knowledge_base.retrieve_policy",
+          "arguments_hash": "8344f03a143e",
+          "server": "knowledge_base:mcp-stdio",
+          "latency_ms": 68,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:22:54+00:00",
+          "tool_name": "github.triage_issue",
+          "arguments_hash": "2e0f925b77aa",
+          "server": "github:mcp-stdio",
+          "latency_ms": 267,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    },
+    {
+      "task": "Database query and reporting",
+      "success_criteria": "Produce a small report from query results.",
+      "tools_resources_used": "database.run_query (MCP stdio), database.generate_report (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 449,
+      "cost_estimate": "Medium",
+      "failure_modes": "Report generation requires approval.",
+      "recovery_actions": "Approval granted before the write step.",
+      "final_output": "Report generated and stored for review.",
+      "approved": true,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:22:55+00:00",
+          "tool_name": "database.run_query",
+          "arguments_hash": "b0ab7d76a30f",
+          "server": "database:mcp-stdio",
+          "latency_ms": 213,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:22:55+00:00",
+          "tool_name": "database.generate_report",
+          "arguments_hash": "e00a2b072241",
+          "server": "database:mcp-stdio",
+          "latency_ms": 236,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    },
+    {
+      "task": "Repository triage",
+      "success_criteria": "Inspect the repo and identify the next action.",
+      "tools_resources_used": "github.repo_info (MCP stdio), github.list_commits (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 332,
+      "cost_estimate": "Low",
+      "failure_modes": "None in the demo run.",
+      "recovery_actions": "Not needed.",
+      "final_output": "Repository triage summary with recent commits.",
+      "approved": false,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:22:56+00:00",
+          "tool_name": "github.repo_info",
+          "arguments_hash": "4bc74e7c5761",
+          "server": "github:mcp-stdio",
+          "latency_ms": 203,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:22:57+00:00",
+          "tool_name": "github.list_commits",
+          "arguments_hash": "9ae5c1eb6a7a",
+          "server": "github:mcp-stdio",
+          "latency_ms": 129,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    },
+    {
+      "task": "Pull request creation",
+      "success_criteria": "Open a PR after the fix is approved.",
+      "tools_resources_used": "github.repo_info (MCP stdio), github.open_pr (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 249,
+      "cost_estimate": "Medium",
+      "failure_modes": "Write tool requires approval.",
+      "recovery_actions": "Approval gate displayed before the PR step.",
+      "final_output": "Pull request created at a demo GitHub URL.",
+      "approved": true,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:22:58+00:00",
+          "tool_name": "github.repo_info",
+          "arguments_hash": "25e8b323fb21",
+          "server": "github:mcp-stdio",
+          "latency_ms": 118,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:22:58+00:00",
+          "tool_name": "github.open_pr",
+          "arguments_hash": "518d8992b309",
+          "server": "github:mcp-stdio",
+          "latency_ms": 131,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    },
+    {
+      "task": "Knowledge base lookup",
+      "success_criteria": "Retrieve governance guidance for the demo.",
+      "tools_resources_used": "knowledge_base.answer_faq (MCP stdio), knowledge_base.fetch_guidance (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 189,
+      "cost_estimate": "Low",
+      "failure_modes": "None in the demo run.",
+      "recovery_actions": "Not needed.",
+      "final_output": "Guidance returned for approvals and least privilege.",
+      "approved": false,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:22:59+00:00",
+          "tool_name": "knowledge_base.answer_faq",
+          "arguments_hash": "e0726b685147",
+          "server": "knowledge_base:mcp-stdio",
+          "latency_ms": 58,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:22:59+00:00",
+          "tool_name": "knowledge_base.fetch_guidance",
+          "arguments_hash": "1894ca227e09",
+          "server": "knowledge_base:mcp-stdio",
+          "latency_ms": 131,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    },
+    {
+      "task": "Workflow log review",
+      "success_criteria": "Read logs and extract the main signal.",
+      "tools_resources_used": "filesystem.read_file (MCP stdio), filesystem.summarize_doc (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 402,
+      "cost_estimate": "Low",
+      "failure_modes": "None in the demo run.",
+      "recovery_actions": "Not needed.",
+      "final_output": "Workflow logs summarized for the presenter.",
+      "approved": false,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:23:00+00:00",
+          "tool_name": "filesystem.read_file",
+          "arguments_hash": "9ec3dd4788a7",
+          "server": "filesystem:mcp-stdio",
+          "latency_ms": 177,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:23:01+00:00",
+          "tool_name": "filesystem.summarize_doc",
+          "arguments_hash": "fa307ee2a9cb",
+          "server": "filesystem:mcp-stdio",
+          "latency_ms": 225,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    },
+    {
+      "task": "Policy check",
+      "success_criteria": "Verify that write actions are gated.",
+      "tools_resources_used": "knowledge_base.retrieve_policy (MCP stdio), github.triage_issue (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 143,
+      "cost_estimate": "Low",
+      "failure_modes": "None in the demo run.",
+      "recovery_actions": "Not needed.",
+      "final_output": "Policy explanation ready for the audience.",
+      "approved": false,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:23:01+00:00",
+          "tool_name": "knowledge_base.retrieve_policy",
+          "arguments_hash": "c4f5d10a1dce",
+          "server": "knowledge_base:mcp-stdio",
+          "latency_ms": 70,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:23:02+00:00",
+          "tool_name": "github.triage_issue",
+          "arguments_hash": "4c5b49a0c9f3",
+          "server": "github:mcp-stdio",
+          "latency_ms": 73,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    },
+    {
+      "task": "Interoperability check",
+      "success_criteria": "Confirm the same tools can be reused across agents.",
+      "tools_resources_used": "github.repo_info (MCP stdio), filesystem.search_docs (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 411,
+      "cost_estimate": "Low",
+      "failure_modes": "None in the demo run.",
+      "recovery_actions": "Not needed.",
+      "final_output": "Interoperability note prepared for the closing slide.",
+      "approved": false,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:23:03+00:00",
+          "tool_name": "github.repo_info",
+          "arguments_hash": "4bc74e7c5761",
+          "server": "github:mcp-stdio",
+          "latency_ms": 203,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:23:04+00:00",
+          "tool_name": "filesystem.search_docs",
+          "arguments_hash": "23881fc98a53",
+          "server": "filesystem:mcp-stdio",
+          "latency_ms": 208,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    },
+    {
+      "task": "End-to-end audit log review",
+      "success_criteria": "Show the traceable output for all actions.",
+      "tools_resources_used": "filesystem.summarize_doc (MCP stdio), knowledge_base.fetch_guidance (MCP stdio)",
+      "steps": 2,
+      "latency_ms": 462,
+      "cost_estimate": "Low",
+      "failure_modes": "None in the demo run.",
+      "recovery_actions": "Not needed.",
+      "final_output": "Audit log summary captured for the final slide.",
+      "approved": false,
+      "tool_calls": [
+        {
+          "timestamp": "2026-05-18T12:23:04+00:00",
+          "tool_name": "filesystem.summarize_doc",
+          "arguments_hash": "d491db7970d5",
+          "server": "filesystem:mcp-stdio",
+          "latency_ms": 239,
+          "status": "success",
+          "retries": 0
+        },
+        {
+          "timestamp": "2026-05-18T12:23:05+00:00",
+          "tool_name": "knowledge_base.fetch_guidance",
+          "arguments_hash": "904d0c5e152f",
+          "server": "knowledge_base:mcp-stdio",
+          "latency_ms": 223,
+          "status": "success",
+          "retries": 0
+        }
+      ]
+    }
+  ],
+  "tool_calls": [
+    {
+      "timestamp": "2026-05-18T12:22:52+00:00",
+      "tool_name": "filesystem.search_docs",
+      "arguments_hash": "2ae8fa2fc787",
+      "server": "filesystem:mcp-stdio",
+      "latency_ms": 117,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:53+00:00",
+      "tool_name": "filesystem.summarize_doc",
+      "arguments_hash": "8d1b93612612",
+      "server": "filesystem:mcp-stdio",
+      "latency_ms": 208,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:53+00:00",
+      "tool_name": "knowledge_base.retrieve_policy",
+      "arguments_hash": "8344f03a143e",
+      "server": "knowledge_base:mcp-stdio",
+      "latency_ms": 68,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:54+00:00",
+      "tool_name": "github.triage_issue",
+      "arguments_hash": "2e0f925b77aa",
+      "server": "github:mcp-stdio",
+      "latency_ms": 267,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:55+00:00",
+      "tool_name": "database.run_query",
+      "arguments_hash": "b0ab7d76a30f",
+      "server": "database:mcp-stdio",
+      "latency_ms": 213,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:55+00:00",
+      "tool_name": "database.generate_report",
+      "arguments_hash": "e00a2b072241",
+      "server": "database:mcp-stdio",
+      "latency_ms": 236,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:56+00:00",
+      "tool_name": "github.repo_info",
+      "arguments_hash": "4bc74e7c5761",
+      "server": "github:mcp-stdio",
+      "latency_ms": 203,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:57+00:00",
+      "tool_name": "github.list_commits",
+      "arguments_hash": "9ae5c1eb6a7a",
+      "server": "github:mcp-stdio",
+      "latency_ms": 129,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:58+00:00",
+      "tool_name": "github.repo_info",
+      "arguments_hash": "25e8b323fb21",
+      "server": "github:mcp-stdio",
+      "latency_ms": 118,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:58+00:00",
+      "tool_name": "github.open_pr",
+      "arguments_hash": "518d8992b309",
+      "server": "github:mcp-stdio",
+      "latency_ms": 131,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:59+00:00",
+      "tool_name": "knowledge_base.answer_faq",
+      "arguments_hash": "e0726b685147",
+      "server": "knowledge_base:mcp-stdio",
+      "latency_ms": 58,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:22:59+00:00",
+      "tool_name": "knowledge_base.fetch_guidance",
+      "arguments_hash": "1894ca227e09",
+      "server": "knowledge_base:mcp-stdio",
+      "latency_ms": 131,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:23:00+00:00",
+      "tool_name": "filesystem.read_file",
+      "arguments_hash": "9ec3dd4788a7",
+      "server": "filesystem:mcp-stdio",
+      "latency_ms": 177,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:23:01+00:00",
+      "tool_name": "filesystem.summarize_doc",
+      "arguments_hash": "fa307ee2a9cb",
+      "server": "filesystem:mcp-stdio",
+      "latency_ms": 225,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:23:01+00:00",
+      "tool_name": "knowledge_base.retrieve_policy",
+      "arguments_hash": "c4f5d10a1dce",
+      "server": "knowledge_base:mcp-stdio",
+      "latency_ms": 70,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:23:02+00:00",
+      "tool_name": "github.triage_issue",
+      "arguments_hash": "4c5b49a0c9f3",
+      "server": "github:mcp-stdio",
+      "latency_ms": 73,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:23:03+00:00",
+      "tool_name": "github.repo_info",
+      "arguments_hash": "4bc74e7c5761",
+      "server": "github:mcp-stdio",
+      "latency_ms": 203,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:23:04+00:00",
+      "tool_name": "filesystem.search_docs",
+      "arguments_hash": "23881fc98a53",
+      "server": "filesystem:mcp-stdio",
+      "latency_ms": 208,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:23:04+00:00",
+      "tool_name": "filesystem.summarize_doc",
+      "arguments_hash": "d491db7970d5",
+      "server": "filesystem:mcp-stdio",
+      "latency_ms": 239,
+      "status": "success",
+      "retries": 0
+    },
+    {
+      "timestamp": "2026-05-18T12:23:05+00:00",
+      "tool_name": "knowledge_base.fetch_guidance",
+      "arguments_hash": "904d0c5e152f",
+      "server": "knowledge_base:mcp-stdio",
+      "latency_ms": 223,
+      "status": "success",
+      "retries": 0
+    }
+  ]
+}
