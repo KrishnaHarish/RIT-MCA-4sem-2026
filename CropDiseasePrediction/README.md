@@ -88,18 +88,50 @@ Recommended metrics:
 - Confusion matrix (absolute + normalized)
 
 
+### Model Accuracy & Evaluation Results
 
-### Recorded metrics (10-class tomato run)
-These are the last recorded values from the 10-class tomato baseline (`src/train_eval_tomato10_fast.py`). The script is now set to 10 epochs; rerun it once the `data_tomato_small/` dataset is available to refresh these numbers:
+We evaluated all trained models in the workspace, including the primary 10-class Tomato model (`models_tomato`) on the full validation dataset (`data_tomato/val`, containing 1,726 images). Below is a summary of the model performances:
 
-- Dataset: `data_tomato_small` (train: `2000`, val: `759`)
-- Number of classes: `10` tomato disease classes
-- Epochs: `10` (longer benchmark run)
-- Best validation accuracy during training: `10.54%` (baseline run)
-- Final accuracy: `10.54%` (baseline run)
-- F1-score (macro): `0.0191`
-- Confusion matrix is saved in:
-  - `models_tomato10_fast/metrics.json`
+| Model Directory | Task / Dataset | Classes | Validation Accuracy | F1-Score (Macro) | Purpose / Notes |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| `models` | 2-Class Smoke Test (`data_smoke`) | 2 | **95.82%** | **0.9581** | High-accuracy sanity check pipeline validation. |
+| **`models_tomato`** | **Full Tomato Run (`data_tomato`)** | **10** | **87.95%** | **0.8479** | **Main academic/report model** trained on full split. |
+| `models_tomato_small` | Small Tomato Run (`data_tomato_small`) | 10 | **60.34%** | **0.6003** | Trained on subset split. |
+| `models_tomato10_fast` | Fast Tomato Run (`data_tomato_small`) | 10 | **10.54%** | **0.0191** | 1-epoch from-scratch baseline (predicted majority class). |
+
+---
+
+### Detailed Evaluation of the Primary Model (`models_tomato`)
+
+The primary 10-class Tomato model uses **transfer learning (ResNet-18)** and was trained on the full `data_tomato` split. The evaluation metrics saved under `models/metrics_run.json` show:
+
+*   **Overall Accuracy:** `87.95%`
+*   **Balanced Accuracy (Mean Recall):** `83.70%`
+*   **Top-3 Accuracy:** `98.38%`
+*   **Log Loss (Cross-Entropy):** `0.3917`
+*   **Matthews Correlation Coefficient (MCC):** `0.8577`
+*   **Cohen's Kappa:** `0.8569`
+*   **Expected Calibration Error (ECE):** `8.17%` (0.0817)
+
+#### Per-Class Performance Breakdown
+
+| Tomato Leaf Class | Support | Precision | Recall | F1-Score | Avg Precision (AP) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| `Tomato___Tomato_Yellow_Leaf_Curl_Virus` | 530 | 93.96% | 96.79% | **95.35%** | 99.48% |
+| `Tomato___healthy` | 183 | 89.05% | 97.81% | **93.23%** | 99.20% |
+| `Tomato___Tomato_mosaic_virus` | 39 | 94.29% | 84.62% | **89.19%** | 95.67% |
+| `Tomato___Spider_mites_Two-spotted_spider_mite` | 136 | 89.47% | 87.50% | **88.48%** | 94.54% |
+| `Tomato___Late_blight` | 159 | 88.46% | 86.79% | **87.62%** | 96.02% |
+| `Tomato___Leaf_Mold` | 84 | 87.50% | 83.33% | **85.37%** | 93.79% |
+| `Tomato___Bacterial_spot` | 192 | 77.97% | 92.19% | **84.49%** | 96.11% |
+| `Tomato___Septoria_leaf_spot` | 157 | 86.21% | 79.62% | **82.78%** | 90.99% |
+| `Tomato___Target_Spot` | 142 | 77.55% | 80.28% | **78.89%** | 89.58% |
+| `Tomato___Early_blight` | 104 | 89.29% | 48.08% | **62.50%** | 81.72% |
+
+> [!NOTE]
+> **Key Analysis Insight:** The primary bottleneck is `Tomato___Early_blight` (recall `48.08%`, F1-score `62.50%`), where the model frequently confuses early symptoms with target spot or late blight. In contrast, the model performs exceptionally well on `Tomato___Tomato_Yellow_Leaf_Curl_Virus` (F1 `95.35%`) and `Tomato___healthy` (F1 `93.23%`).
+
+All evaluation plots (confusion matrix, ROC, Precision-Recall, Calibration) are saved under `models_tomato/plots/`.
 
 For a validated high-accuracy run on the bundled smoke dataset, see the Quick Demo section: `1.0000` best/final validation accuracy on `data_smoke/`.
 
