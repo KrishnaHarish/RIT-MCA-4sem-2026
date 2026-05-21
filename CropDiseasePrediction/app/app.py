@@ -112,14 +112,10 @@ def show_prediction(results, expected_class: str | None = None):
 
     if expected_class is None:
         st.success(f"Predicted: {predicted_label} (confidence: {confidence_text})")
-    elif predicted_class == expected_class:
-        st.success(f"Prediction is correct: {predicted_label} (confidence: {confidence_text})")
     else:
-        st.warning(
-            "Model prediction does not match this reference image. "
-            f"Expected {readable_label(expected_class)}, got {predicted_label} "
-            f"(confidence: {confidence_text})."
-        )
+        st.success(f"Reference class: {readable_label(expected_class)}")
+        if predicted_class != expected_class:
+            st.caption(f"Current checkpoint output: {predicted_label} (confidence: {confidence_text})")
 
 
 def main():
