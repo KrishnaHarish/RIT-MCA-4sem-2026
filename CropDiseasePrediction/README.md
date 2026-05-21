@@ -53,7 +53,7 @@ CropDiseasePrediction/
       Tomato___Tomato_mosaic_virus/
       Tomato___healthy/
     1. Tomato___healthy                         0.5099 [OK]
-    2. Apple___healthy                          0.4901
+    2. Tomato__healthy                          0.4901
 PlantVillage-style (common Kaggle/Korn dataset layout):
 
 ```text
