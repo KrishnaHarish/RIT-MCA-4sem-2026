@@ -5,9 +5,9 @@
 Show how a universal AI agent can use MCP to discover tools, execute safe actions, and keep an auditable trace while working across multiple tool servers.
 
 ## Runnable Entry Point
-Run `python "Technical Seminar/runnable_demo.py"` to show the live seminar demo from the terminal. ../.venv/bin/python runnable_demo.py 
+Run `python "Technical Seminar/demo.py"` to show the live seminar demo from the terminal.
 cd /workspaces/RIT-MCA-4sem-2026
-./.venv/bin/python "Technical Seminar/runnable_demo.py"
+./.venv/bin/python "Technical Seminar/demo.py"
 
 ## Demo Setup
 Use this as the recommended evaluation setup for the seminar:

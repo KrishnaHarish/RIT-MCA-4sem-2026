@@ -6,7 +6,7 @@ This version uses the official MCP Python SDK:
 - structured logging, approval gating, and saved artifacts
 
 Run with the project virtualenv so the `mcp` package is available:
-    /workspaces/RIT-MCA-4sem-2026/.venv/bin/python "Technical Seminar/runnable_demo.py"
+    /workspaces/RIT-MCA-4sem-2026/.venv/bin/python "Technical Seminar/demo.py"
 """
 
 from __future__ import annotations
